@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './Navbar.css'
 import SNT_logo from '../../assets/S&T_review_logo_trans.png'
 import default_profile from '../../assets/empty_profile.svg'
@@ -8,13 +9,13 @@ function Navbar() {
 
     return (
         <div className="Navbar">
-            <img className='logo' src={SNT_logo} onClick={() => window.location.reload()}/>
+            <Link to={"/"} className='logo'><img className='logo' src={SNT_logo} /></Link>
             <div className="search">
-                <input className='searchBar' placeholder='Search for a building...'></input> 
+                <input className='searchBar' placeholder='Search for a building...' type='text'></input> 
                 <img src={searchIcon}/>
             </div>
             
-            <img className='profile' src={default_profile}/>
+            <Link to={"/login"}><img className='profile' src={default_profile}/></Link>
         </div>
     )
 }

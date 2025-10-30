@@ -22,10 +22,12 @@
     width: 80%;
     border-radius: 10px;
     border-color: transparent;
+    padding-left: 10px;
     font-size: 10px;
     font-family:Arial, Helvetica, sans-serif;
     margin-left: 9%;
 }
+
 
 .search img{
     height: 90%;

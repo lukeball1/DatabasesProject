@@ -1,0 +1,26 @@
+.title{
+    padding-top: 3%;
+    margin-left: 1%;
+    font-size: 18px;
+    font-family:Arial, Helvetica, sans-serif;
+    text-align: left;
+}
+
+.review-container{
+    display: grid;
+    width: 90%;
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-top: 1%;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 40px;
+    justify-content: space-evenly;
+}
+
+.review{
+    
+}
+
+.review img{
+    width: 100%;
+}
