@@ -1,12 +1,72 @@
 .login{
-    width: 100%;
+    width: 60%;
+    height: 40%;
     margin: 6rem auto;
     display: flex;
-    flex-direction: column;
-    width: 60%;
     align-items: center;
+    gap: 20%;
+    padding-right: 3rem;
 }
 
-.login img{
-    width: 10rem;
+.login-logo img{
+    width: 90%;
+    padding-right: 6rem;
+}
+
+.login-logo h1{
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    left: -5%;
+    position: relative;
+    top: -5rem;
+}
+
+.input-fields{
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    gap: 35px;
+}
+
+.input-fields input{
+    border-radius: 25px;
+    border-width: 1px;
+    height: 3rem;
+    width: 16rem;
+    padding-left: 9%;
+    padding-right: 5%;
+    font-size: 16px;
+    
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.input-fields input:hover{
+    scale: 1.02;
+    transition: 0.3s;
+}
+
+.input-fields input:focus-within,
+.input-fields input:host-context(:placeholder-shown){
+    top: -8px;
+    left: 8px; 
+    font-size: 12px;
+    color: #333;
+    scale: 1.02;
+    transition: 0.4s;
+}
+
+.input-fields button{
+    border-width: 1px;
+    border-radius: 25px;
+    width: 6rem;
+    height: 2rem;
+    color: white;
+    background-color: #007A33;
+    opacity: 80%;
+}
+
+.input-fields button:hover{
+    scale: 1.05;
+    background-color: #154734;
+    transition: 0.5s;
 }
