@@ -2,8 +2,8 @@ import Layout from "./Components/Layout";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./Pages/Home/Home";
 import Login from "./Pages/Login/Login";
+import Signup from "./Pages/Signup/Signup";
 import './App.css';
-import Navbar from "./Components/Navbar/Navbar"
 
 function App() {
 
@@ -13,6 +13,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Route>
       </Routes>
     </Router>

@@ -7,13 +7,16 @@ function Login() {
         <div className='login'>
             <div className="login-logo">
                 <img alt='' src={logo}/>
-                <h1>New to S&T Review? <Link to={"/sign-up"} >Sign up</Link></h1>
+                <h1>New to S&T Review? <Link to={"/signup"} >Sign up</Link></h1>
             </div>
-            <div className="input-fields">
-                <input type='email' placeholder='Email'></input>
-                <input type='password' placeholder='Password'></input>
-                <button>Login</button>
-            </div>
+            <form>
+                <div className="input-fields">
+                    <input type='email' placeholder='Email'></input>
+                    <input type='password' placeholder='Password'></input>
+                    <button type='submit'>Login</button>
+                </div>
+            </form>
+            
             
         </div>
     )

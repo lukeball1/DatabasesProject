@@ -6,6 +6,8 @@
     align-items: center;
     gap: 20%;
     padding-right: 3rem;
+    border-radius: 15px;
+    border: 2px solid #2C2C2C;
 }
 
 .login-logo img{
