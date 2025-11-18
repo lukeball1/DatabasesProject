@@ -28,6 +28,7 @@
     flex-direction: column; 
     align-items: center;
     gap: 35px;
+    margin-right: 2rem;
 }
 
 .input-fields input{
