@@ -22,7 +22,7 @@ function Signup () {
 
 
     return (
-        <div className="Signup">
+        <div className="signup">
             <h2>Sign Up</h2>
 
             <div className="basic-info">

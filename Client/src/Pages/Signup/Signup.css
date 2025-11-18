@@ -1,0 +1,37 @@
+.signup{
+    margin: auto; 
+    margin-top: 10%;
+    padding-bottom: 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    border-radius: 20px;
+    width: 60%;
+    border: 2px solid rgba(44, 44, 44, 0.5);
+    background-color: rgb(255, 255, 251, 0.8);
+    box-shadow: 2px 1px 2px rgba(0,0,0,0.06), 0 6px 16px rgba(0,0,0,0.10), 0 18px 36px rgba(0,0,0,0.04);
+
+}
+
+.signup h2{
+    margin-top: 1rem;
+}
+
+.basic-info{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px; 
+}
+
+.basic-info input{
+    width: 70%;
+}
+
+.names{
+    display: inherit;
+    flex-direction: row; 
+    gap: 1rem;
+
+}
