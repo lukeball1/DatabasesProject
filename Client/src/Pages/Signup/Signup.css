@@ -1,17 +1,21 @@
 .signup{
     margin: auto; 
-    margin-top: 10%;
-    padding-bottom: 5%;
+    margin-top: 5%;
+    padding-bottom: 3%;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 2rem;
     border-radius: 20px;
-    width: 60%;
+    width: 35%;
     border: 2px solid rgba(44, 44, 44, 0.5);
     background-color: rgb(255, 255, 251, 0.8);
     box-shadow: 2px 1px 2px rgba(0,0,0,0.06), 0 6px 16px rgba(0,0,0,0.10), 0 18px 36px rgba(0,0,0,0.04);
-
+}
+@media(width < 750px){
+    .signup{
+        width: 60%;
+    }
 }
 
 .signup h2{
@@ -21,17 +25,79 @@
 .basic-info{
     display:flex;
     flex-direction: column;
-    align-items: center;
-    gap: 10px; 
+    align-items: left;
+    gap: 1.5rem; 
 }
 
 .basic-info input{
-    width: 70%;
+    
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 5px;
+    border-color: 1px solid rgba(44, 44, 44, 0.10);
+    height: 1.5rem;
+    padding-left: 0.5rem;
 }
 
 .names{
     display: inherit;
+    width: inherit;
     flex-direction: row; 
-    gap: 1rem;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
 
+.role-selection{
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    display: inherit;
+}
+
+.role-selection select{
+    border-radius: 5px;
+    height: 1.5rem;
+    width: auto;
+    margin-left: 1rem;
+}
+
+.role-selection option{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.signup button{
+    border-width: 0.5px;
+    border-radius: 25px;
+    width: 6rem;
+    height: 2rem;
+    color: white;
+    background-color: #007A33;
+    opacity: 90%;
+}
+
+.signup button:hover{
+    scale: 1.05;
+    background-color: #154734;
+    transition: 0.5s;
+}
+
+.role-section{
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    gap: 1rem;
+    margin-top: 5%;
+}
+
+.role-section input{
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 5px;
+    border-color: 1px solid rgba(44, 44, 44, 0.10);
+    height: 1.5rem;
+    padding-left: 0.5rem;
+}
+
+#staffYear{
+    margin: auto;
+    width: 5rem;
+    align-items: center;
 }
