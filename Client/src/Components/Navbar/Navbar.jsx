@@ -14,7 +14,7 @@ function Navbar() {
                 <input className='searchBar' placeholder='Search for a building...' type='text'></input> 
                 <img src={searchIcon}/>
             </div>
-            
+            {/* if user isn't logged in, link to login page. If user is logged in, create a profile page */}
             <Link to={"/login"}><img className='profile' src={default_profile}/></Link>
         </div>
     )
