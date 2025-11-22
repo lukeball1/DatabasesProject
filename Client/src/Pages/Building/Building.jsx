@@ -1,12 +1,22 @@
 import { useParams } from 'react-router-dom';
+import Modal from "react-modal";
+import { useState } from 'react';
 import templateimg from '../../../../Server/static/building_images/havener.jpg';
 import './Building.css';
+
+Modal.setAppElement("#root");
 
 function Building() {
 
     const buildingID = () => {
             const { buildingID } = useParams();
     }
+
+    const [modalOpen, setModalOpen] = useState(false);
+    const openModal = () => setModalOpen(true);
+    const closeModal = () => setModalOpen(false);
+
+    
 
     return (
         <div className="building">
@@ -28,8 +38,18 @@ function Building() {
             
             </div>
             <div className="review-button">
-                    <button>Write a Review</button>
+                    <button onClick={openModal}>Write a Review</button>
+
             </div>
+            <Modal
+                isOpen={modalOpen} onRequestClose={closeModal}
+                style={{
+                    content: {
+                        margin: "auto"
+                    }
+                }}>
+
+            </Modal>
         </div>
     );
 }
