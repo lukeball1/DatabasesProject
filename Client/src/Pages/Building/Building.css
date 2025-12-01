@@ -43,6 +43,7 @@
     height: 3rem;
     color: white;
     background-color: #007A33;
+    border-color: transparent;
 }
 
 .review-button button:hover{
@@ -51,5 +52,97 @@
     background-color: #154734;
 }
 
+.modal-overlay {
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.6);
+}
 
+.modal-content {
+    background: rgb(249, 231, 216);
+    padding: 25px;
+    position: relative;
+    margin: auto;
+    margin-top: 9%;
+    border-radius: 12px;
+    width: 50%;
+}
 
+.modal-content form{
+    margin-left: 1.5rem;
+    
+}
+
+.modal-content input{
+    display: inherit;
+    flex-direction: column;
+    align-items: center;
+    margin: auto;
+    margin-top: 2rem;
+    border-radius: 15px;
+    height: 2rem;
+    width: 7rem;
+    color: white;
+    background-color: #007A33;
+    border-color: transparent;
+}
+
+.modal-content input:hover{
+    scale: 1.05;
+    transition: 0.5s ease;
+    background-color: #154734;
+}
+
+.close-img{
+    position: absolute;
+    top: 0.75rem;
+    right: 4px;
+
+}
+
+.close-img img{
+    width: 80%;
+    border-radius: 20px;
+}
+
+.close-img img:hover{
+    background-color: rgba(0, 0, 0, 0.15);
+    scale: 1.1;
+    transition: 0.3s;
+}
+
+.stars{
+    margin-top: 2rem;
+}
+
+.review-msg{
+    display: relative;
+    position: relative;
+    gap: 1rem;        
+    flex-direction: column;
+    width: 75%;
+    margin-top: 0.75rem;
+}
+
+.review-msg textarea {
+    border-radius: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    padding-left: 3%;
+    padding-top: 1.5%;
+    width: 100%;
+    resize: none;
+}
+
+.count-message{
+    position: absolute;
+    bottom: 6px;
+    right: 6px; 
+    font-size: 12px;
+}
