@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import Modal from "react-modal";
 import { useState } from 'react';
-import templateimg from '../../../../Server/static/building_images/havener.jpg';
+// import templateimg from '../../../../Server/static/building_images/havener.jpg';
 import closeIcon from '../../assets/closeIcon.svg';
 import './Building.css';
 
@@ -22,7 +22,7 @@ function Building() {
         <div className="building">
             <div className='content'>
                 <div className="left">
-                    <img src={templateimg} />
+                    {/* <img src={templateimg} /> */}
                     <div className="building-details">
                         <h1>Name: Havener</h1>
                         <h3>Special Features: ?</h3>
