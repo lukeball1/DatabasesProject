@@ -6,6 +6,10 @@ import closeIcon from '../../assets/closeIcon.svg';
 import './Building.css';
 
 Modal.setAppElement("#root");
+// USE THIS FOR FETCHING FROM SERVER 
+const api = import.meta.env.VITE_API_URL;
+// fetch(`${api}/api/users`);
+
 
 function Building() {
 
