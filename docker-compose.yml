@@ -13,7 +13,8 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+    - mysql_data:/var/lib/mysql
+    - ./DatabaseCreationScript.sql:/docker-entrypoint-initdb.d/DatabaseCreationScript.sql
 
   backend:
     build: ./server
