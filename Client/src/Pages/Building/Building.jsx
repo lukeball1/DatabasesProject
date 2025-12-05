@@ -13,14 +13,16 @@ const api = import.meta.env.VITE_API_URL;
 
 function Building() {
 
-    const buildingID = () => {
-            const { buildingID } = useParams();
-    }
+    // const buildingID = () => {
+    //         const { buildingID } = useParams();
+    // }
 
     const [modalOpen, setModalOpen] = useState(false);
     const openModal = () => setModalOpen(true);
     const closeModal = () => setModalOpen(false);
     const [text, setText] = useState("");
+
+    // const reviewData = fetch(`${api}/buildings`);//find endpoint for specific building
 
     return (
         <div className="building">

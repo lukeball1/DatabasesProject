@@ -1,10 +1,35 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import bcrypt
 import uuid
 import datetime
 from db import get_connection  # <-- your db.py
 
 app = Flask(__name__)
+CORS(app, origins=["http://localhost:5173"])
+
+
+
+# --- Endpoint to return building name list ---
+@app.route("/buildings", methods=["GET"])
+def get_buildings():
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("SELECT BuildingName FROM Building;")
+        rows = cursor.fetchall()
+        
+        buildingNames = [row['BuildingName'] for row in rows]
+        response = {"success": True, "buildings":buildingNames}
+    except Exception as e:
+        response = {"success": False, "error": str(e)}
+    finally:
+        cursor.close()
+        conn.close()
+        
+    return jsonify(response)
+
+
 
 # --- Endpoint to create account ---
 @app.route("/create_account", methods=["POST"])
@@ -158,4 +183,5 @@ def add_special_feature():
 
 # --- Run the server ---
 if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5000, host="0.0.0.0")
+    CORS(app, origins=["http://localhost:5173"])

@@ -1,8 +1,13 @@
+import { useState, useEffect } from "react";
 import { Router, Link } from "react-router-dom";
 import Basicreviews from "../../assets/Basicreviews.js";
 import './Home.css'
 
 function Home() {
+    //api base url
+    const api = import.meta.env.VITE_API_URL;
+
+
     return(
         <>
             <div className="title">
