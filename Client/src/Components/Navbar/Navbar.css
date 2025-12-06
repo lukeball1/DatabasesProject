@@ -35,6 +35,22 @@
     cursor: pointer;
 }
 
+.search-dropdown{
+    position: absolute;
+    top: 100%;
+    left: 30%;
+    right: 30%;
+    max-height: 200px;
+    overflow-Y: auto;
+    background-color: rgb(255, 255, 251, 1);
+    border: 1px solid #ccc;
+    z-index: 1000;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    border-radius: 15px;
+}
+
 .logo{
     max-height: 100%;
     width: auto;

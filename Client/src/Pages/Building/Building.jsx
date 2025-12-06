@@ -8,14 +8,16 @@ import './Building.css';
 Modal.setAppElement("#root");
 // USE THIS FOR FETCHING FROM SERVER 
 const api = import.meta.env.VITE_API_URL;
-// fetch(`${api}/api/users`);
-
 
 function Building() {
 
-    // const buildingID = () => {
-    //         const { buildingID } = useParams();
-    // }
+    //get the building name from url
+    const { buildingID } = useParams();
+    const buildingName = decodeURIComponent(buildingID);
+
+    const cleanName = buildingName.replace(/\s+/g, "");
+    const imageURL = `${api}/static/building_images/${cleanName.toLowerCase().trim()}.jpg`;  // or .png
+
 
     const [modalOpen, setModalOpen] = useState(false);
     const openModal = () => setModalOpen(true);
@@ -28,9 +30,9 @@ function Building() {
         <div className="building">
             <div className='content'>
                 <div className="left">
-                    {/* <img src={templateimg} /> */}
+                    <img src={imageURL} alt={buildingName} />
                     <div className="building-details">
-                        <h1>Name: Havener</h1>
+                        <h1>Name: {buildingName}</h1>
                         <h3>Special Features: ?</h3>
                         <h3> Average Rating: </h3>
                     </div>
