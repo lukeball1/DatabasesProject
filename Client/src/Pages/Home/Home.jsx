@@ -41,15 +41,12 @@ function Home() {
                     return (
                         <Link to={`/buildings/${encodedName}`}>
                             <div key={index} className="review">
-                                
-                                    <img
-                                        src={imageURL}
-                                        alt={b.name}
-                                        className="building-img"
-                                        style={{ cursor: "pointer" }}
-                                    />
-                                
-
+                                <img
+                                    src={imageURL}
+                                    alt={b.name}
+                                    className="building-img"
+                                    style={{ cursor: "pointer" }}
+                                />
                                 <p>Building name: {b.name}</p>
                                 <p>Rating: {b.rating.toFixed(1)}</p>
                             </div>
