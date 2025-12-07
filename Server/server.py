@@ -224,6 +224,94 @@ def add_special_feature():
 
     return jsonify(response)
 
+
+
+
+# --- Endpoint to find the top three rated buildings ---
+@app.route("/top-buildings", methods=["GET"])
+def top_buildings():
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("""
+            SELECT 
+                b.BuildingName,
+                AVG(r.NumStars) AS AvgRating
+            FROM Building b
+            LEFT JOIN WritesRevAbt w ON b.BuildingName = w.BuildingID
+            LEFT JOIN Review r ON w.ReviewID = r.ReviewID
+            GROUP BY b.BuildingName
+            ORDER BY AvgRating DESC
+            LIMIT 3;
+        """)
+        rows = cursor.fetchall()
+        buildings = []
+
+        for row in rows:
+            # Construct an "image identifier" — frontend can combine with static folder
+            image_name = f"{row['BuildingName']}.jpg"  # assume images are named exactly as building names
+            buildings.append({
+                "name": row['BuildingName'],
+                "rating": float(row['AvgRating']) if row['AvgRating'] else 0,
+                "image_name": image_name
+            })
+
+        response = {"success": True, "data": buildings}
+
+    except Exception as e:
+        response = {"success": False, "error": str(e)}
+    finally:
+        cursor.close()
+        conn.close()
+
+    return jsonify(response)
+
+
+
+# --- Endpoint to get all info about a single building ---
+@app.route("/buildings/<building_name>", methods=["GET"])
+def get_building(building_name):
+    conn = get_connection()
+    cursor = conn.cursor()
+    try:
+        # Convert underscores to spaces for DB query
+        building_name_db = building_name.replace("_", " ")
+
+        # Get building info
+        cursor.execute("SELECT * FROM Building WHERE BuildingName = %s", (building_name_db,))
+        building = cursor.fetchone()
+        if not building:
+            return jsonify({"success": False, "error": "Building not found"}), 404
+
+        # Get special features
+        cursor.execute("SELECT * FROM SpecialFeature WHERE BuildingName = %s", (building_name_db,))
+        features = cursor.fetchall()
+
+        # Optionally, get reviews
+        cursor.execute("""
+            SELECT R.NumStars, R.Description, W.ReviewerID
+            FROM Review R
+            JOIN WritesRevAbt W ON R.ReviewID = W.ReviewID
+            WHERE W.BuildingID = %s
+        """, (building_name_db,))
+        reviews = cursor.fetchall()
+
+        response = {
+            "success": True,
+            "building": building,
+            "features": features,
+            "reviews": reviews
+        }
+    except Exception as e:
+        response = {"success": False, "error": str(e)}
+    finally:
+        cursor.close()
+        conn.close()
+
+    return jsonify(response)
+
+
+
 # --- Run the server ---
 if __name__ == "__main__":
     app.run(debug=True, port=5000, host="0.0.0.0")
