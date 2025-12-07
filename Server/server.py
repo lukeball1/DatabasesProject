@@ -249,7 +249,11 @@ def top_buildings():
 
         for row in rows:
             # Construct an "image identifier" — frontend can combine with static folder
+            
             image_name = f"{row['BuildingName']}.jpg"  # assume images are named exactly as building names
+            
+            image_name = image_name.replace(" ", "_")
+
             buildings.append({
                 "name": row['BuildingName'],
                 "rating": float(row['AvgRating']) if row['AvgRating'] else 0,
