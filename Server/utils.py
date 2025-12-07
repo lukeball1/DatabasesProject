@@ -9,7 +9,7 @@ def insertAuthToken(reviewerID, auth_token):
     response = ""
     try:
         #if the auth token exists, update, if not store
-        cursor.execute("REPLACE INTO AuthToken (ReviewerID, Token) VALUES (%s %s)", (reviewerID, auth_token))
+        cursor.execute("REPLACE INTO AuthToken (ReviewerID, Token) VALUES (%s, %s)", (reviewerID, auth_token))
         conn.commit()
         response = "success"
     except Exception as e:

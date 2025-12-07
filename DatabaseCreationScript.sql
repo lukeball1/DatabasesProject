@@ -12,7 +12,7 @@ DROP TABLE IF EXISTS AuthToken;
 
 -- Create tables
 CREATE TABLE Reviewer (
-    ReviewerID CHAR(150) PRIMARY KEY,
+    ReviewerID VARCHAR(150) PRIMARY KEY,
     Fname CHAR(75),
     Lname CHAR(75),
     JoinDate CHAR(75),
@@ -20,7 +20,7 @@ CREATE TABLE Reviewer (
 );
 
 CREATE TABLE AuthToken (
-    ReviewerID CHAR(150) NOT NULL,
+    ReviewerID VARCHAR(150) NOT NULL,
     Token VARCHAR(255) NOT NULL,
     PRIMARY KEY(ReviewerID),
     FOREIGN KEY(ReviewerID) REFERENCES Reviewer(ReviewerID) ON DELETE CASCADE
@@ -28,7 +28,7 @@ CREATE TABLE AuthToken (
 
 CREATE TABLE Student (
     StudentID CHAR(75) PRIMARY KEY,
-    ReviewerID CHAR(75),
+    ReviewerID VARCHAR(150),
     GradYear INT,
     Major CHAR(75),
     HasGraduated BOOLEAN,
@@ -38,7 +38,7 @@ CREATE TABLE Student (
 
 CREATE TABLE Staff (
     StaffID CHAR(75) PRIMARY KEY,
-    ReviewerID CHAR(75),
+    ReviewerID VARCHAR(150),
     Department CHAR(75),
     Position CHAR(75),
     FOREIGN KEY (ReviewerID) REFERENCES Reviewer(ReviewerID)
@@ -46,7 +46,7 @@ CREATE TABLE Staff (
 
 CREATE TABLE Visitor (
     VisitorID CHAR(75) PRIMARY KEY,
-    ReviewerID CHAR(75),
+    ReviewerID VARCHAR(150),
     Affiliation CHAR(75),
     FOREIGN KEY (ReviewerID) REFERENCES Reviewer(ReviewerID)
 );
@@ -74,7 +74,7 @@ CREATE TABLE Review (
 );
 
 CREATE TABLE WritesRevAbt (
-    ReviewerID CHAR(75),
+    ReviewerID VARCHAR(150),
     ReviewID CHAR(75),
     BuildingID CHAR(75),
     PRIMARY KEY (ReviewerID, ReviewID, BuildingID),
@@ -84,7 +84,7 @@ CREATE TABLE WritesRevAbt (
 );
 
 CREATE TABLE RatesReview (
-    ReviewerID CHAR(75),
+    ReviewerID VARCHAR(150),
     ReviewID CHAR(75),
     Rating CHAR(75),
     PRIMARY KEY (ReviewerID, ReviewID),
