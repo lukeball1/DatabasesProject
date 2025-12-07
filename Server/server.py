@@ -3,7 +3,8 @@ from flask_cors import CORS
 import bcrypt
 import uuid
 import datetime
-from db import get_connection  # <-- your db.py
+from db import get_connection  # your db.py
+from utils import * # get all functions from utils.py
 
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173"])
@@ -96,11 +97,14 @@ def login():
 
         # Authentication passed → generate auth token
         auth_token = str(uuid.uuid4())
-
-        response = {
-            "success": True,
-            "auth_token": auth_token
-        }
+        auth_success = insertAuthToken(user_email, auth_token)
+        if auth_success == "success":
+            response = {
+                "success": True,
+                "auth_token": auth_token
+            }
+        elif auth_success == "error":
+            raise Exception
     except Exception as e:
         response = {"success": False, "error": str(e)}
     finally:
