@@ -39,14 +39,19 @@ function Home() {
                     const encodedName = encodeURIComponent(b.name);
 
                     return (
-                        <Link to={`/buildings/${encodedName}`}>
+                        <Link 
+                            to={`/buildings/${encodedName}`}
+                            style={{ textDecoration: "none", color: "inherit" }}
+                        >
                             <div key={index} className="review">
-                                <img
-                                    src={imageURL}
-                                    alt={b.name}
-                                    className="building-img"
-                                    style={{ cursor: "pointer" }}
-                                />
+                                
+                                    <img
+                                        src={imageURL}
+                                        alt={b.name}
+                                        className="building-img"
+                                        style={{ cursor: "pointer" }}
+                                    />
+
                                 <p>Building name: {b.name}</p>
                                 <p>Rating: {b.rating.toFixed(1)}</p>
                             </div>

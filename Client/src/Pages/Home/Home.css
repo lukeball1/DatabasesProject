@@ -29,3 +29,15 @@
     margin-top: 0.5rem;
     border-radius: 10px;
 }
+
+/* Remove link styling inside review card */
+.review a {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+.review > p {
+    color: #000 !important;
+    text-decoration: none !important;
+}
+
