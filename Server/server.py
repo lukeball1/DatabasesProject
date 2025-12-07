@@ -8,8 +8,6 @@ from db import get_connection  # <-- your db.py
 app = Flask(__name__)
 CORS(app, origins=["http://localhost:5173"])
 
-
-
 # --- Endpoint to return building name list ---
 @app.route("/buildings", methods=["GET"])
 def get_buildings():
@@ -44,16 +42,15 @@ def create_account():
     extra2 = data.get("extra2")
     has_graduated = data.get("hasGraduated", False)
 
-    hashed_email = bcrypt.hashpw(email.encode('utf-8'), bcrypt.gensalt())
+    
     hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-    hashed_email_str = hashed_email.decode('utf-8')
     hashed_password_str = hashed_password.decode('utf-8')
 
     conn = get_connection()
     cursor = conn.cursor()
     try:
         cursor.callproc('AddAccount', [
-            hashed_email_str, hashed_password_str, fname, lname,
+            email, hashed_password_str, fname, lname,
             datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
             user_type, extra1, extra2, has_graduated
         ])
@@ -67,6 +64,48 @@ def create_account():
         cursor.close()
         conn.close()
 
+    return jsonify(response)
+
+# --- Endpoint to log in a user ---
+@app.route("/login", methods=["POST"])
+def login():
+    data = request.json
+    user_email = data.get("email")
+    user_password = data.get("password")
+    conn = get_connection()
+    cursor = conn.cursor()
+    
+    try:
+        #query database for reviewerID and password
+        cursor.execute("""
+            SELECT ReviewerID, Password
+            FROM Reviewer
+            WHERE ReviewerID = %s
+        """, (user_email,))
+        
+        row = cursor.fetchone()
+        #if email isn't a match
+        if not row:
+            return jsonify({"success": False, "error": "Email not found"}), 400
+        
+        stored_hashed_password = row["Password"]
+
+        # Compare the provided password with stored bcrypt hash
+        if not bcrypt.checkpw(user_password.encode('utf-8'), stored_hashed_password.encode('utf-8')):
+            return jsonify({"success": False, "error": "Incorrect password"}), 400
+
+        # Authentication passed → generate auth token
+        auth_token = str(uuid.uuid4())
+
+        response = {
+            "success": True,
+            "auth_token": auth_token
+        }
+    except Exception as e:
+        response = {"success": False, "error": str(e)}
+    finally:
+        cursor.close()
+        conn.close()
     return jsonify(response)
 
 # --- Endpoint to add a review ---

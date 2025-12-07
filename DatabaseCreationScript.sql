@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS Student;
 DROP TABLE IF EXISTS Staff;
 DROP TABLE IF EXISTS Visitor;
 DROP TABLE IF EXISTS Reviewer;
+DROP TABLE IF EXISTS AuthToken;
 
 -- Create tables
 CREATE TABLE Reviewer (
@@ -16,6 +17,13 @@ CREATE TABLE Reviewer (
     Lname CHAR(75),
     JoinDate CHAR(75),
     Password VARCHAR(255)
+);
+
+CREATE TABLE AuthToken (
+    ReviewerID CHAR(150) NOT NULL,
+    Token VARCHAR(255) NOT NULL,
+    PRIMARY KEY(ReviewerID),
+    FOREIGN KEY(ReviewerID) REFERENCES Reviewer(ReviewerID) ON DELETE CASCADE
 );
 
 CREATE TABLE Student (
@@ -94,7 +102,7 @@ DROP PROCEDURE IF EXISTS AddSpecialFeature;
 DELIMITER $$
 
 CREATE PROCEDURE AddAccount (
-    IN p_HashedEmail VARCHAR(255),
+    IN p_Email VARCHAR(255),
     IN p_HashedPassword VARCHAR(255),
     IN p_Fname CHAR(75),
     IN p_Lname CHAR(75),
@@ -106,18 +114,27 @@ CREATE PROCEDURE AddAccount (
 )
 BEGIN
     INSERT INTO Reviewer (ReviewerID, Fname, Lname, JoinDate, Password)
-    VALUES (p_HashedEmail, p_Fname, p_Lname, p_JoinDate, p_HashedPassword);
+    VALUES (p_Email, p_Fname, p_Lname, p_JoinDate, p_HashedPassword);
 
     IF p_Type = 'Student' THEN
         INSERT INTO Student (StudentID, ReviewerID, GradYear, Major, HasGraduated, Job_Internship)
-        VALUES (p_HashedEmail, p_HashedEmail, CAST(p_Extra1 AS UNSIGNED), p_Extra2, p_HasGraduated, TRUE);
+        VALUES (p_Email, p_Email, CAST(p_Extra1 AS UNSIGNED), p_Extra2, p_HasGraduated, TRUE);
     ELSEIF p_Type = 'Staff' THEN
         INSERT INTO Staff (StaffID, ReviewerID, Department, Position)
-        VALUES (p_HashedEmail, p_HashedEmail, p_Extra1, p_Extra2);
+        VALUES (p_Email, p_Email, p_Extra1, p_Extra2);
     ELSEIF p_Type = 'Visitor' THEN
         INSERT INTO Visitor (VisitorID, ReviewerID, Affiliation)
-        VALUES (p_HashedEmail, p_HashedEmail, p_Extra1);
+        VALUES (p_Email, p_Email, p_Extra1);
     END IF;
+END$$
+
+CREATE PROCEDURE AddToken(
+    IN p_ReviewerID VARCHAR(255),
+    IN p_Token VARCHAR(255)
+)
+BEGIN
+    INSERT INTO AuthToken(ReviewerID, Token)
+    VALUES (p_ReviewerID, p_Token);
 END$$
 
 CREATE PROCEDURE AddReview(
