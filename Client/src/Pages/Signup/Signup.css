@@ -38,6 +38,26 @@
     padding-left: 0.5rem;
 }
 
+.graduation{
+    display: flex;
+    margin: auto;
+    gap: 0.75rem;
+    padding: 0;
+    width: 55%;
+}
+
+.graduation label{
+    width: 100%;
+    margin: auto;
+}
+
+.graduation input{
+    height: 10%;
+    width: 10%;
+    margin: auto;
+    accent-color: #007A33;
+}
+
 .names{
     display: inherit;
     width: inherit;
