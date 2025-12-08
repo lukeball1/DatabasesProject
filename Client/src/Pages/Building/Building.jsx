@@ -33,6 +33,7 @@ function Building() {
     //write a review states
     const [rating, setRating] = useState(0);
     const [hoverRating, setHoverRating] = useState(0);
+    const [sentReview, setSentReview] = useState(false);
 
 
     // const reviewData = fetch(`${api}/buildings`);//find endpoint for specific building
@@ -51,12 +52,13 @@ function Building() {
                 else{
                     console.error("Error loading building:", data.error);
                 }
+                setSentReview(false);
             } catch (err) {
                 console.error("Fetch error:", err);
             }
         }
         fetchBuilding();
-    }, [buildingName]);
+    }, [buildingName, sentReview]);
 
     async function handleSubmit(e) {
         e.preventDefault();
@@ -111,6 +113,7 @@ function Building() {
             } else {
                 alert("Error: " + data.error);
             }
+            setSentReview(true);
         } catch (err) {
             console.error(err);
             alert("Failed to submit review");
@@ -159,7 +162,7 @@ function Building() {
                     ) : (
                         reviews.map((rev, idx) => (
                             <div className="review" key={idx}>
-                                <h2>⭐ {rev.NumStars}</h2>
+                                <h2>{"⭐".repeat(rev.NumStars)}</h2>
                                 <p className="review-desc">{rev.Description}</p>
                                 <p className="reviewer">— {rev.ReviewerID}</p>
                             </div>
