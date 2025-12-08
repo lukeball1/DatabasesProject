@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Modal from "react-modal";
 import { useState, useEffect } from 'react';
 // import templateimg from '../../../../Server/static/building_images/havener.jpg';
@@ -14,9 +14,11 @@ function Building() {
     //get the building name from url
     const { buildingID } = useParams();
     const buildingName = decodeURIComponent(buildingID);
+    const navigate = useNavigate();
 
     const cleanName = buildingName.replace(/\s+/g, "");
-    const imageURL = `${api}/static/building_images/${buildingName}.jpg`;  // or .png
+    const image = buildingName.replace(/ /g, "_");
+    const imageURL = `${api}/static/building_images/${image}.jpg`;  // or .png
 
     const [modalOpen, setModalOpen] = useState(false);
     const openModal = () => setModalOpen(true);
@@ -28,19 +30,23 @@ function Building() {
     const [features, setFeatures] = useState([]);
     const [reviews, setReviews] = useState([]);
 
+    //write a review states
+    const [rating, setRating] = useState(0);
+    const [hoverRating, setHoverRating] = useState(0);
+
 
     // const reviewData = fetch(`${api}/buildings`);//find endpoint for specific building
 
     useEffect(() => {
         async function fetchBuilding() {
             try{
-                const result = await fetch(`${apt}/buildings/${buildingName}`);
+                const result = await fetch(`${api}/buildings/${buildingName}`);
                 const data = await result.json();
 
                 if (data.success) {
                     setBuildingData(data.building);
                     setFeatures(data.features);
-                    setReviews(data.review);
+                    setReviews(data.reviews);
                 }
                 else{
                     console.error("Error loading building:", data.error);
@@ -51,6 +57,66 @@ function Building() {
         }
         fetchBuilding();
     }, [buildingName]);
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+
+        if (rating === 0) {
+            alert("Please select a rating");
+            return;
+        }
+
+        try {
+            //get token and verify user
+            const token = localStorage.getItem("auth_token");
+            if (!token) {
+                alert("You must be logged in to submit a review.");
+                navigate("/login");
+                return;
+            }
+
+            const verify = await fetch(`${api}/verify_token`, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({auth_token : token})
+            });
+
+            const verifyData = await verify.json();
+            if(!verifyData.success) {
+                alert("Session expired. Please log in again");
+                navigate("/login");
+                return;
+            }
+
+            const reviewerID = verifyData.reviewer_id;
+
+            const response = await fetch(`${api}/add_review`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json"},
+                body: JSON.stringify({
+                    review_id: crypto.randomUUID(),
+                    num_stars: rating,
+                    description: text,
+                    reviewer_id: reviewerID,
+                    building_name: buildingName
+                })
+            });
+
+            const data = await response.json();
+            if (data.success){
+                alert("Review submitted!");
+                setModalOpen(false);
+                setText("");
+                setRating(0);
+            } else {
+                alert("Error: " + data.error);
+            }
+        } catch (err) {
+            console.error(err);
+            alert("Failed to submit review");
+        }
+
+    }
 
 
     return (
@@ -68,7 +134,7 @@ function Building() {
                                 <li>No features listed.</li>
                             ) : (
                                 features.map((f, idx) => (
-                                    <li key={idx}>{f.Name}</li>
+                                    <li key={idx}>{f.Name} — {f.Description}</li>
                                 ))
                             )}
                         </ul>
@@ -77,17 +143,16 @@ function Building() {
                             Average Rating:{" "}
                             {reviews.length > 0
                                 ? (
-                                        reviews.reduce(
-                                            (sum, r) => sum + r.NumStars,
-                                            0
-                                        ) / reviews.length
-                                    ).toFixed(1)
+                                    reviews.reduce(
+                                        (sum, r) => sum + r.NumStars,
+                                        0
+                                    ) / reviews.length
+                                ).toFixed(1)
                                 : "No reviews"}
                         </h3>
                     </div>
                 </div>
 
-                {/* RIGHT SIDE REVIEWS */}
                 <div className="right-reviews">
                     {reviews.length === 0 ? (
                         <p>No reviews yet.</p>
@@ -109,7 +174,6 @@ function Building() {
                 </button>
             </div>
 
-            {/* REVIEW MODAL */}
             <Modal
                 isOpen={modalOpen}
                 onRequestClose={() => setModalOpen(false)}
@@ -122,25 +186,48 @@ function Building() {
 
                 <h1>Write a review for {buildingName}</h1>
 
-                <form>
-                    <div className="review-msg">
-                        <label>Write Your Review</label>
-                        <textarea
-                            maxLength={256}
-                            value={text}
-                            onChange={(e) => setText(e.target.value)}
-                            placeholder="Write your review here..."
-                            rows="8"
-                        ></textarea>
+                <form onSubmit={handleSubmit}>
+                {/* ⭐ STAR RATING SECTION */}
+                <div className="star-rating">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                        <span
+                            key={star}
+                            onClick={() => setRating(star)}
+                            onMouseEnter={() => setHoverRating(star)}
+                            onMouseLeave={() => setHoverRating(0)}
+                            style={{
+                                cursor: "pointer",
+                                fontSize: "32px",
+                                color:
+                                    star <= (hoverRating || rating)
+                                        ? "#FFD700"
+                                        : "#CCC"
+                            }}
+                        >
+                            ★
+                        </span>
+                    ))}
+                </div>
 
-                        <div className="count-message">
-                            <span id="current">{text.length}</span>
-                            <span> / 256</span>
-                        </div>
+                {/* REVIEW TEXT AREA */}
+                <div className="review-msg">
+                    <label>Write Your Review</label>
+                    <textarea
+                        maxLength={256}
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}
+                        placeholder="Write your review here..."
+                        rows="8"
+                    ></textarea>
+
+                    <div className="count-message">
+                        <span id="current">{text.length}</span>
+                        <span> / 256</span>
                     </div>
+                </div>
 
-                    <input type="submit" value="Submit Review" />
-                </form>
+                <input type="submit" value="Submit Review" />
+            </form>
             </Modal>
         </div>
     );
