@@ -141,7 +141,7 @@ CREATE PROCEDURE AddReview(
     IN p_DateWritten DATETIME,
     IN p_NumStars INT,
     IN p_Description CHAR(150),
-    IN p_ReviewerID CHAR(75),
+    IN p_ReviewerID VARCHAR(150),
     IN p_BuildingName CHAR(75)
 )
 BEGIN
