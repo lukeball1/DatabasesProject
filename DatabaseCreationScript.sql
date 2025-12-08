@@ -32,7 +32,6 @@ CREATE TABLE Student (
     GradYear INT,
     Major CHAR(75),
     HasGraduated BOOLEAN,
-    Job_Internship CHAR(75),
     FOREIGN KEY (ReviewerID) REFERENCES Reviewer(ReviewerID)
 );
 
@@ -117,7 +116,7 @@ BEGIN
     VALUES (p_Email, p_Fname, p_Lname, p_JoinDate, p_HashedPassword);
 
     IF p_Type = 'Student' THEN
-        INSERT INTO Student (StudentID, ReviewerID, GradYear, Major, HasGraduated, Job_Internship)
+        INSERT INTO Student (StudentID, ReviewerID, GradYear, Major, HasGraduated)
         VALUES (p_Email, p_Email, CAST(p_Extra1 AS UNSIGNED), p_Extra2, p_HasGraduated, TRUE);
     ELSEIF p_Type = 'Staff' THEN
         INSERT INTO Staff (StaffID, ReviewerID, Department, Position)
