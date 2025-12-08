@@ -65,8 +65,8 @@ function Signup () {
         }
 
         else if (role ==="staff"){
-            extra1 = staffID;
-            extra2 = department;
+            extra1 = department;
+            extra2 = officeNumber;
         }
 
         else if (role ==="visitor"){

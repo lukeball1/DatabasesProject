@@ -41,6 +41,7 @@ def create_account():
     user_type = data.get("type")
     extra1 = data.get("extra1")
     extra2 = data.get("extra2")
+    extra3 = data.get("extra3")
     has_graduated = data.get("hasGraduated", False)
 
     
@@ -53,7 +54,7 @@ def create_account():
         cursor.callproc('AddAccount', [
             email, hashed_password_str, fname, lname,
             datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            user_type, extra1, extra2, has_graduated
+            user_type, extra1, extra2, extra3, has_graduated
         ])
         conn.commit()
         auth_token = str(uuid.uuid4())

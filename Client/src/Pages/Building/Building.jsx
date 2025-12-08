@@ -57,6 +57,11 @@ function Building() {
                 console.error("Fetch error:", err);
             }
         }
+
+        async function fetchReviewNames() {
+            
+        }
+
         fetchBuilding();
     }, [buildingName, sentReview]);
 
