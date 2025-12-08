@@ -24,8 +24,6 @@ function Navbar() {
                 const data = await result.json();
 
                 setBuildings(data.buildings || []);
-                console.log("buildings set");
-                console.log(buildings);
                 setFiltered(data.buildings || []); //initial value is the full list
             } catch (err){
                 console.error("Error building functions", err);
@@ -39,8 +37,6 @@ function Navbar() {
         //filter buildings whenever query or buildings change
         const lowerSearch = search.toLowerCase();
         setFiltered(buildings.filter((b) => b.toLowerCase().includes(lowerSearch)));
-        console.log("Search is updated");
-        console.log("filtered list:", filtered);
     }, [search, buildings]);
 
     const handleEnterPress = () => {
