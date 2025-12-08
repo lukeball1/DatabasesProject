@@ -300,9 +300,10 @@ def get_building(building_name):
 
         # Optionally, get reviews
         cursor.execute("""
-            SELECT R.NumStars, R.Description, W.ReviewerID
+            SELECT R.NumStars, R.Description, W.ReviewerID, R.ReviewID, U.Fname, U.Lname
             FROM Review R
             JOIN WritesRevAbt W ON R.ReviewID = W.ReviewID
+            JOIN Reviewer U ON W.ReviewerID = U.ReviewerID
             WHERE W.BuildingID = %s
         """, (building_name_db,))
         reviews = cursor.fetchall()
@@ -311,7 +312,7 @@ def get_building(building_name):
             "success": True,
             "building": building,
             "features": features,
-            "reviews": reviews
+            "reviews": reviews,
         }
     except Exception as e:
         response = {"success": False, "error": str(e)}
