@@ -56,10 +56,12 @@ function Signup () {
         //extra fields determined on spot
         let extra1 = null;
         let extra2 = null;
+        let extra3 = null;
 
         if (role === "student"){
-            extra1 = studentID;
+            extra1 = year;
             extra2 = major;
+            extra3 = studentID;
         }
 
         else if (role ==="staff"){
@@ -80,6 +82,7 @@ function Signup () {
             type: role,
             extra1,
             extra2,
+            extra3,
             hasGraduated: hasGraduated,
         };
 
