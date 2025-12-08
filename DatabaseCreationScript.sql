@@ -252,7 +252,6 @@ CALL AddSpecialFeature('Visitor Center', 'Welcome Center', 'Information desk and
 -- Reviewers & AuthTokens
 -- =============================
 
--- Students with hardcoded 12-digit StudentID
 CALL AddAccount('emma.johnson@example.com', 'hashed_pw_1', 'Emma', 'Johnson', '2022-08-12', 'Student', '2025', 'Computer Science', '100000000001', FALSE);
 CALL AddToken('emma.johnson@example.com', 'tok_ab91f1c8c34e4a99');
 
@@ -265,14 +264,12 @@ CALL AddToken('sophia.davis@example.com', 'tok_3391b7d991defa33');
 CALL AddAccount('ethan.moore@example.com', 'hashed_pw_10', 'Ethan', 'Moore', '2023-03-12', 'Student', '2027', 'Civil Engineering', '100000000004', FALSE);
 CALL AddToken('ethan.moore@example.com', 'tok_cc77e12a90bb1311');
 
--- Visitors with NULL for extra3
 CALL AddAccount('liam.smith@example.com', 'hashed_pw_2', 'Liam', 'Smith', '2023-01-20', 'Visitor', 'Local Resident', NULL, NULL, NULL);
 CALL AddToken('liam.smith@example.com', 'tok_71fde5b8332bfa11');
 
 CALL AddAccount('ava.brown@example.com', 'hashed_pw_5', 'Ava', 'Brown', '2022-09-14', 'Visitor', 'Alumni', NULL, NULL, NULL);
 CALL AddToken('ava.brown@example.com', 'tok_91aa221eaf772300');
 
--- Staff with NULL for extra3
 CALL AddAccount('olivia.martin@example.com', 'hashed_pw_3', 'Olivia', 'Martin', '2021-11-05', 'Staff', 'IT Services', '102', NULL, NULL);
 CALL AddToken('olivia.martin@example.com', 'tok_ae33f22c998d00d4');
 
@@ -282,6 +279,8 @@ CALL AddToken('will.jones@example.com', 'tok_ab11cd772e01aa14');
 CALL AddAccount('mia.wilson@example.com', 'hashed_pw_9', 'Mia', 'Wilson', '2021-04-21', 'Staff', 'Library Services', '104', NULL, NULL);
 CALL AddToken('mia.wilson@example.com', 'tok_33ddaa1190e3f522');
 
+CALL AddAccount('james.miller@example.com', 'hashed_pw_8', 'James', 'Miller', '2021-02-21', 'Visitor', 'Mother', NULL, NULL, NULL);
+CALL AddToken('james.miller@example.com', 'tok_33ddaa1190c998d0');
 
 -- ================================================
 -- 96 REVIEWS FOR ALL BUILDINGS
