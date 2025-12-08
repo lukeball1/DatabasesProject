@@ -109,6 +109,7 @@ CREATE PROCEDURE AddAccount (
     IN p_Type CHAR(20),
     IN p_Extra1 VARCHAR(75), -- GradYear / Department / Affiliation
     IN p_Extra2 VARCHAR(75), -- Major / Position / NULL
+    IN p_Extra3 VARCHAR(75), -- StudentID
     IN p_HasGraduated BOOLEAN -- Only used for students
 )
 BEGIN
@@ -117,7 +118,7 @@ BEGIN
 
     IF p_Type = 'Student' THEN
         INSERT INTO Student (StudentID, ReviewerID, GradYear, Major, HasGraduated)
-        VALUES (p_Email, p_Email, CAST(p_Extra1 AS UNSIGNED), p_Extra2, p_HasGraduated);
+        VALUES (p_Extra3, p_Email, CAST(p_Extra1 AS UNSIGNED), p_Extra2, p_HasGraduated);
     ELSEIF p_Type = 'Staff' THEN
         INSERT INTO Staff (StaffID, ReviewerID, Department, Position)
         VALUES (p_Email, p_Email, p_Extra1, p_Extra2);
@@ -251,35 +252,36 @@ CALL AddSpecialFeature('Visitor Center', 'Welcome Center', 'Information desk and
 -- Reviewers & AuthTokens
 -- =============================
 
-CALL AddAccount('emma.johnson@example.com', 'hashed_pw_1', 'Emma', 'Johnson', '2022-08-12', 'Student', '2025', 'Computer Science', FALSE);
+-- Students with hardcoded 12-digit StudentID
+CALL AddAccount('emma.johnson@example.com', 'hashed_pw_1', 'Emma', 'Johnson', '2022-08-12', 'Student', '2025', 'Computer Science', '100000000001', FALSE);
 CALL AddToken('emma.johnson@example.com', 'tok_ab91f1c8c34e4a99');
 
-CALL AddAccount('liam.smith@example.com', 'hashed_pw_2', 'Liam', 'Smith', '2023-01-20', 'Visitor', 'Local Resident', NULL, NULL);
-CALL AddToken('liam.smith@example.com', 'tok_71fde5b8332bfa11');
-
-CALL AddAccount('olivia.martin@example.com', 'hashed_pw_3', 'Olivia', 'Martin', '2021-11-05', 'Staff', 'IT Services', 'Technician', NULL);
-CALL AddToken('olivia.martin@example.com', 'tok_ae33f22c998d00d4');
-
-CALL AddAccount('noah.williams@example.com', 'hashed_pw_4', 'Noah', 'Williams', '2020-03-10', 'Student', '2024', 'Mechanical Engineering', TRUE);
+CALL AddAccount('noah.williams@example.com', 'hashed_pw_4', 'Noah', 'Williams', '2020-03-10', 'Student', '2024', 'Mechanical Engineering', '100000000002', TRUE);
 CALL AddToken('noah.williams@example.com', 'tok_0091bda771abcc91');
 
-CALL AddAccount('ava.brown@example.com', 'hashed_pw_5', 'Ava', 'Brown', '2022-09-14', 'Visitor', 'Alumni', NULL, NULL);
-CALL AddToken('ava.brown@example.com', 'tok_91aa221eaf772300');
-
-CALL AddAccount('will.jones@example.com', 'hashed_pw_6', 'William', 'Jones', '2021-06-30', 'Staff', 'Chemistry Dept.', 'Lab Manager', NULL);
-CALL AddToken('will.jones@example.com', 'tok_ab11cd772e01aa14');
-
-CALL AddAccount('sophia.davis@example.com', 'hashed_pw_7', 'Sophia', 'Davis', '2023-02-02', 'Student', '2026', 'Physics', FALSE);
+CALL AddAccount('sophia.davis@example.com', 'hashed_pw_7', 'Sophia', 'Davis', '2023-02-02', 'Student', '2026', 'Physics', '100000000003', FALSE);
 CALL AddToken('sophia.davis@example.com', 'tok_3391b7d991defa33');
 
-CALL AddAccount('james.miller@example.com', 'hashed_pw_8', 'James', 'Miller', '2020-12-17', 'Visitor', 'Parent', NULL, NULL);
-CALL AddToken('james.miller@example.com', 'tok_8ab533f31dde9982');
+CALL AddAccount('ethan.moore@example.com', 'hashed_pw_10', 'Ethan', 'Moore', '2023-03-12', 'Student', '2027', 'Civil Engineering', '100000000004', FALSE);
+CALL AddToken('ethan.moore@example.com', 'tok_cc77e12a90bb1311');
 
-CALL AddAccount('mia.wilson@example.com', 'hashed_pw_9', 'Mia', 'Wilson', '2021-04-21', 'Staff', 'Library Services', 'Assistant', NULL);
+-- Visitors with NULL for extra3
+CALL AddAccount('liam.smith@example.com', 'hashed_pw_2', 'Liam', 'Smith', '2023-01-20', 'Visitor', 'Local Resident', NULL, NULL, NULL);
+CALL AddToken('liam.smith@example.com', 'tok_71fde5b8332bfa11');
+
+CALL AddAccount('ava.brown@example.com', 'hashed_pw_5', 'Ava', 'Brown', '2022-09-14', 'Visitor', 'Alumni', NULL, NULL, NULL);
+CALL AddToken('ava.brown@example.com', 'tok_91aa221eaf772300');
+
+-- Staff with NULL for extra3
+CALL AddAccount('olivia.martin@example.com', 'hashed_pw_3', 'Olivia', 'Martin', '2021-11-05', 'Staff', 'IT Services', 'Technician', NULL, NULL);
+CALL AddToken('olivia.martin@example.com', 'tok_ae33f22c998d00d4');
+
+CALL AddAccount('will.jones@example.com', 'hashed_pw_6', 'William', 'Jones', '2021-06-30', 'Staff', 'Chemistry Dept.', 'Lab Manager', NULL, NULL);
+CALL AddToken('will.jones@example.com', 'tok_ab11cd772e01aa14');
+
+CALL AddAccount('mia.wilson@example.com', 'hashed_pw_9', 'Mia', 'Wilson', '2021-04-21', 'Staff', 'Library Services', 'Assistant', NULL, NULL);
 CALL AddToken('mia.wilson@example.com', 'tok_33ddaa1190e3f522');
 
-CALL AddAccount('ethan.moore@example.com', 'hashed_pw_10', 'Ethan', 'Moore', '2023-03-12', 'Student', '2027', 'Civil Engineering', FALSE);
-CALL AddToken('ethan.moore@example.com', 'tok_cc77e12a90bb1311');
 
 -- ================================================
 -- 96 REVIEWS FOR ALL BUILDINGS
