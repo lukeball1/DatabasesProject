@@ -39,7 +39,7 @@ CREATE TABLE Staff (
     StaffID CHAR(75) PRIMARY KEY,
     ReviewerID VARCHAR(150),
     Department CHAR(75),
-    Position CHAR(75),
+    OfficeNumber CHAR(75),
     FOREIGN KEY (ReviewerID) REFERENCES Reviewer(ReviewerID)
 );
 
@@ -108,7 +108,7 @@ CREATE PROCEDURE AddAccount (
     IN p_JoinDate CHAR(75),
     IN p_Type CHAR(20),
     IN p_Extra1 VARCHAR(75), -- GradYear / Department / Affiliation
-    IN p_Extra2 VARCHAR(75), -- Major / Position / NULL
+    IN p_Extra2 VARCHAR(75), -- Major / OfficeNumber / NULL
     IN p_Extra3 VARCHAR(75), -- StudentID
     IN p_HasGraduated BOOLEAN -- Only used for students
 )
@@ -120,7 +120,7 @@ BEGIN
         INSERT INTO Student (StudentID, ReviewerID, GradYear, Major, HasGraduated)
         VALUES (p_Extra3, p_Email, CAST(p_Extra1 AS UNSIGNED), p_Extra2, p_HasGraduated);
     ELSEIF p_Type = 'Staff' THEN
-        INSERT INTO Staff (StaffID, ReviewerID, Department, Position)
+        INSERT INTO Staff (StaffID, ReviewerID, Department, OfficeNumber)
         VALUES (p_Email, p_Email, p_Extra1, p_Extra2);
     ELSEIF p_Type = 'Visitor' THEN
         INSERT INTO Visitor (VisitorID, ReviewerID, Affiliation)
@@ -273,13 +273,13 @@ CALL AddAccount('ava.brown@example.com', 'hashed_pw_5', 'Ava', 'Brown', '2022-09
 CALL AddToken('ava.brown@example.com', 'tok_91aa221eaf772300');
 
 -- Staff with NULL for extra3
-CALL AddAccount('olivia.martin@example.com', 'hashed_pw_3', 'Olivia', 'Martin', '2021-11-05', 'Staff', 'IT Services', 'Technician', NULL, NULL);
+CALL AddAccount('olivia.martin@example.com', 'hashed_pw_3', 'Olivia', 'Martin', '2021-11-05', 'Staff', 'IT Services', '102', NULL, NULL);
 CALL AddToken('olivia.martin@example.com', 'tok_ae33f22c998d00d4');
 
-CALL AddAccount('will.jones@example.com', 'hashed_pw_6', 'William', 'Jones', '2021-06-30', 'Staff', 'Chemistry Dept.', 'Lab Manager', NULL, NULL);
+CALL AddAccount('will.jones@example.com', 'hashed_pw_6', 'William', 'Jones', '2021-06-30', 'Staff', 'Chemistry Dept.', '103', NULL, NULL);
 CALL AddToken('will.jones@example.com', 'tok_ab11cd772e01aa14');
 
-CALL AddAccount('mia.wilson@example.com', 'hashed_pw_9', 'Mia', 'Wilson', '2021-04-21', 'Staff', 'Library Services', 'Assistant', NULL, NULL);
+CALL AddAccount('mia.wilson@example.com', 'hashed_pw_9', 'Mia', 'Wilson', '2021-04-21', 'Staff', 'Library Services', '104', NULL, NULL);
 CALL AddToken('mia.wilson@example.com', 'tok_33ddaa1190e3f522');
 
 
