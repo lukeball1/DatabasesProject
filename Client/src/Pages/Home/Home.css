@@ -17,14 +17,14 @@
     justify-content: space-evenly;
 }
 
-.review{
+.reviewpage{
     border: 2px solid rgba(44, 44, 44, 0.5);
     border-radius: 15px;
     box-shadow: 2px 1px 2px rgba(0,0,0,0.06), 0 6px 16px rgba(0,0,0,0.10), 0 18px 36px rgba(0,0,0,0.08);
-    height: 90%;
+    height: 100%;
 }
 
-.review img{
+.reviewpage img{
     width: 95%;
     margin: auto;
     margin-top: 0.5rem;
@@ -32,12 +32,12 @@
 }
 
 /* Remove link styling inside review card */
-.review a {
+.reviewpage a {
     text-decoration: none !important;
     color: inherit !important;
 }
 
-.review > p {
+.reviewpage > p {
     color: #000 !important;
     text-decoration: none !important;
 }

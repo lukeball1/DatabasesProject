@@ -29,11 +29,14 @@ function Building() {
     const [buildingData, setBuildingData] = useState(null);
     const [features, setFeatures] = useState([]);
     const [reviews, setReviews] = useState([]);
-
+    
     //write a review states
     const [rating, setRating] = useState(0);
     const [hoverRating, setHoverRating] = useState(0);
     const [sentReview, setSentReview] = useState(false);
+
+    const [reviewRatings, setReviewRatings] = useState({});
+    const [hoverReviewRatings, setHoverReviewRatings] = useState({});
 
 
     // const reviewData = fetch(`${api}/buildings`);//find endpoint for specific building
@@ -58,9 +61,21 @@ function Building() {
             }
         }
 
-        async function fetchReviewNames() {
-            
-        }
+        //Function to pull author names from ReviewIDs given reviewIDs. Chatgpt skip this commented function
+        // async function fetchReviewNames() {
+        //     try{
+        //         //fill list with reviewIDs and use that to query the database
+        //         const reviewerIDs = [];
+        //         for(let i = 0; i < reviews.length; i ++){
+        //             reviewerIDs.append(reviews[i].ReviewerID);
+        //         }
+        //         setReviewIDs(reviewerIDs);
+        //         const result = await fetch (`${api}/review_author`)
+        //         const data = await result.json();
+        //     } catch (err) {
+        //         console.error("Fetch error: ", err);
+        //     }
+        // }
 
         fetchBuilding();
     }, [buildingName, sentReview]);
@@ -126,6 +141,57 @@ function Building() {
 
     }
 
+    async function handleRateReview(reviewID, ratingValue) {
+        try {
+            const token = localStorage.getItem("auth_token");
+            if (!token) {
+                alert("You must be logged in to rate reviews.");
+                navigate("/login");
+                return;
+            }
+
+            // verify token → get reviewer ID
+            const verify = await fetch(`${api}/verify_token`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ auth_token: token }),
+            });
+
+            const verifyData = await verify.json();
+            if (!verifyData.success) {
+                alert("Session expired. Please log in again.");
+                navigate("/login");
+                return;
+            }
+
+            const reviewerID = verifyData.reviewer_id;
+
+            // Send rating to API
+            const response = await fetch(`${api}/rate_review`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    reviewer_id: reviewerID,
+                    review_id: reviewID,
+                    rating: ratingValue,
+                }),
+            });
+
+            const data = await response.json();
+            if (!data.success) {
+                alert("Error rating review: " + data.error);
+                return;
+            }
+
+            alert("Thanks for rating this review!");
+
+        } catch (err) {
+            alert("Failed to rate review");
+            console.error(err);
+        }
+    }
+
+
 
     return (
         <div className="building">
@@ -162,18 +228,61 @@ function Building() {
                 </div>
 
                 <div className="right-reviews">
-                    {reviews.length === 0 ? (
-                        <p>No reviews yet.</p>
-                    ) : (
-                        reviews.map((rev, idx) => (
-                            <div className="review" key={idx}>
-                                <h2>{"⭐".repeat(rev.NumStars)}</h2>
-                                <p className="review-desc">{rev.Description}</p>
-                                <p className="reviewer">— {rev.ReviewerID}</p>
-                            </div>
-                        ))
-                    )}
+    {reviews.length === 0 ? (
+        <p>No reviews yet.</p>
+    ) : (
+        reviews.map((rev, idx) => {
+
+            const userRating = reviewRatings[rev.ReviewID] || 0;
+            const hoverRating = hoverReviewRatings[rev.ReviewID] || 0;
+
+            return (
+                <div className="review" key={idx}>
+                    {/* User's rating for the building */}
+                    <h2>{"⭐".repeat(rev.NumStars)}</h2>
+
+                    <p className="review-desc">{rev.Description}</p>
+                    <p className="reviewer">
+                        — {(rev.Fname && rev.Lname) ? `${rev.Fname} ${rev.Lname}` : "Unknown Reviewer"}
+                    </p>
+
+                    {/* --- ⭐ Rate This Review Section --- */}
+                    <div className="rate-review">
+                        <p>Rate this review:</p>
+
+                        {[1, 2, 3, 4, 5].map((star) => (
+                            <span
+                                key={star}
+                                onClick={() => {
+                                    setReviewRatings(prev => ({ ...prev, [rev.ReviewID]: star }));
+                                    handleRateReview(rev.ReviewID, star);
+                                }}
+                                onMouseEnter={() =>
+                                    setHoverReviewRatings(prev => ({ ...prev, [rev.ReviewID]: star }))
+                                }
+                                onMouseLeave={() =>
+                                    setHoverReviewRatings(prev => ({ ...prev, [rev.ReviewID]: 0 }))
+                                }
+                                style={{
+                                    cursor: "pointer",
+                                    fontSize: "24px",
+                                    color:
+                                        star <= (hoverRating || userRating)
+                                            ? "#FFD700"
+                                            : "#CCC",
+                                    paddingRight: "4px"
+                                }}
+                            >
+                                ★
+                            </span>
+                        ))}
+                    </div>
                 </div>
+            );
+        })
+    )}
+</div>
+
             </div>
 
             <div className="review-button">

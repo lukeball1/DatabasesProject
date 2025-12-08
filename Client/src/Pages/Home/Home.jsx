@@ -43,7 +43,7 @@ function Home() {
                             to={`/buildings/${encodedName}`}
                             style={{ textDecoration: "none", color: "inherit" }}
                         >
-                            <div key={index} className="review">
+                            <div key={index} className="reviewpage">
                                 
                                     <img
                                         src={imageURL}
