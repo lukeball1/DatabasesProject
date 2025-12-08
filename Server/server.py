@@ -41,6 +41,7 @@ def create_account():
     user_type = data.get("type")
     extra1 = data.get("extra1")
     extra2 = data.get("extra2")
+
     has_graduated = data.get("hasGraduated", False)
 
     
@@ -362,6 +363,43 @@ def verify_token():
         conn.close()
 
 
+
+@app.route("/review_author", methods=["POST"])
+def get_review_author():
+    data = request.json
+    review_id = data.get("review_id")
+
+    if not review_id:
+        return jsonify({"success": False, "error": "Missing review_id"}), 400
+
+    conn = get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    try:
+        query = """
+            SELECT r.Fname, r.Lname
+            FROM WritesRevAbt w
+            JOIN Reviewer r ON w.ReviewerID = r.ReviewerID
+            WHERE w.ReviewID = %s;
+        """
+        cursor.execute(query, (review_id,))
+        result = cursor.fetchone()
+
+        if not result:
+            return jsonify({"success": False, "error": "Review not found"}), 404
+
+        return jsonify({
+            "success": True,
+            "fname": result["Fname"],
+            "lname": result["Lname"]
+        })
+
+    finally:
+        cursor.close()
+        conn.close()
+
+
+        
 # --- Run the server ---
 if __name__ == "__main__":
     app.run(debug=True, port=5000, host="0.0.0.0")
