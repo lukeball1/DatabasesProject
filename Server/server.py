@@ -57,7 +57,13 @@ def create_account():
         ])
         conn.commit()
         auth_token = str(uuid.uuid4())
-        response = {"success": True, "auth_token": auth_token}
+        token_success = insertAuthToken(email, auth_token)
+
+        if token_success == "success":
+            response = {"success": True, "auth_token": auth_token}
+        else:
+            response = {"success": False, "error": "Failed to store auth token"}
+
     except Exception as e:
         conn.rollback()
         response = {"success": False, "error": str(e)}
@@ -314,6 +320,46 @@ def get_building(building_name):
 
     return jsonify(response)
 
+
+
+# --- Endpoint to verify an auth token ---
+@app.route("/verify_token", methods=["POST"])
+def verify_token():
+    data = request.json
+    token = data.get("auth_token")
+
+    if not token:
+        return jsonify({"success": False, "error": "No token provided"}), 400
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "SELECT ReviewerID FROM AuthToken WHERE Token = %s",
+            (token,)
+        )
+        row = cursor.fetchone()
+
+        if row:
+            # Token exists → valid
+            return jsonify({
+                "success": True,
+                "reviewer_id": row["ReviewerID"]
+            })
+        else:
+            # Token missing → invalid
+            return jsonify({
+                "success": False,
+                "error": "Invalid or expired token"
+            }), 401
+
+    except Exception as e:
+        return jsonify({"success": False, "error": str(e)}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
 
 
 # --- Run the server ---

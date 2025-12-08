@@ -146,3 +146,38 @@
     right: 6px; 
     font-size: 12px;
 }
+
+.right-reviews {
+    width: 450px;
+    max-height: 500px;  /* LIMIT HEIGHT → activates scroll */
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.review {
+    background: #f4f4f4;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    min-height: 120px;      /* consistent size */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.review h2 {
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+.review-desc {
+    margin: 10px 0;
+    color: #333;
+    font-size: 1rem;
+}
+
+.reviewer {
+    font-size: 0.9rem;
+    color: #555;
+    text-align: right;
+}
