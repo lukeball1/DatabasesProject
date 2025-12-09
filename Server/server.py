@@ -363,7 +363,120 @@ def verify_token():
         cursor.close()
         conn.close()
 
+# --- Endpoint to edit an existing review ---
+@app.route("/edit_review", methods=["POST"])
+def edit_review():
+    data = request.json
+    review_id = data.get("review_id")
+    new_stars = data.get("num_stars")
+    new_description = data.get("description")
+    token = data.get("auth_token")
 
+    if not review_id or new_stars is None or new_description is None or not token:
+        return jsonify({"success": False, "error": "Missing required fields"}), 400
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "SELECT ReviewerID FROM AuthToken WHERE Token = %s",
+            (token,)
+        )
+        token_row = cursor.fetchone()
+
+        if not token_row:
+            return jsonify({"success": False, "error": "Invalid or expired token"}), 401
+        
+        reviewer_id = token_row["ReviewerID"]
+
+        cursor.execute(
+            "SELECT ReviewerID FROM WritesRevAbt WHERE ReviewID = %s",
+            (review_id,)
+        )
+        review_row = cursor.fetchone()
+
+        if not review_row:
+            return jsonify({"success": False, "error": "Review not found"}), 404
+
+        if review_row["ReviewerID"] != reviewer_id:
+            return jsonify({"success": False, "error": "You do not own this review"}), 403
+
+        cursor.execute(
+            """
+            UPDATE Review
+            SET NumStars = %s,
+                Description = %s
+            WHERE ReviewID = %s
+            """,
+            (new_stars, new_description, review_id)
+        )
+
+        conn.commit()
+        return jsonify({"success": True})
+
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"success": False, "error": str(e)}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
+
+# --- Endpoint to delete an existing review ---
+@app.route("/delete_review", methods=["POST"])
+def delete_review():
+    data = request.json
+    review_id = data.get("review_id")
+    token = data.get("auth_token")
+
+    if not review_id or not token:
+        return jsonify({"success": False, "error": "Missing required fields"}), 400
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            "SELECT ReviewerID FROM AuthToken WHERE Token = %s",
+            (token,)
+        )
+        token_row = cursor.fetchone()
+
+        if not token_row:
+            return jsonify({"success": False, "error": "Invalid or expired token"}), 401
+        
+        reviewer_id = token_row["ReviewerID"]
+
+        cursor.execute(
+            "SELECT ReviewerID FROM WritesRevAbt WHERE ReviewID = %s",
+            (review_id,)
+        )
+        review_row = cursor.fetchone()
+
+        if not review_row:
+            return jsonify({"success": False, "error": "Review not found"}), 404
+
+        if review_row["ReviewerID"] != reviewer_id:
+            return jsonify({"success": False, "error": "You do not own this review"}), 403
+
+        cursor.execute(
+            """
+            DELETE FROM Review WHERE ReviewID = %s;
+            """,
+            (review_id,)
+        )
+
+        conn.commit()
+        return jsonify({"success": True})
+
+    except Exception as e:
+        conn.rollback()
+        return jsonify({"success": False, "error": str(e)}), 500
+
+    finally:
+        cursor.close()
+        conn.close()
 
 @app.route("/review_author", methods=["POST"])
 def get_review_author():
@@ -400,7 +513,6 @@ def get_review_author():
         conn.close()
 
 
-        
 # --- Run the server ---
 if __name__ == "__main__":
     app.run(debug=True, port=5000, host="0.0.0.0")
