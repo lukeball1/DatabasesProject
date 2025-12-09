@@ -66,7 +66,7 @@ CREATE TABLE SpecialFeature (
 );
 
 CREATE TABLE Review (
-    ReviewID CHAR(75) PRIMARY KEY,
+    ReviewID CHAR(75) PRIMARY KEY ON DELETE CASCADE,
     DateWritten DATETIME,
     NumStars INT,
     Description CHAR(150)

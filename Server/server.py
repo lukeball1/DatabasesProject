@@ -400,7 +400,31 @@ def get_review_author():
         conn.close()
 
 
-        
+@app.route("/modify/<reviewID>", methods = ["POST"])
+def modifyReview(reviewID):
+    conn = get_connection()
+    cursor = conn.cursor()
+    #try to modify the database based on the reviewID given.
+    #probably authenticate token
+    
+
+
+@app.route("/user/<reviewerID>/reviews", methods= ["GET"])
+def returnReviews(reviewerID):
+    conn = get_connection()
+    cursor = conn.cursor() 
+    #query and return a list of reviews that the reviewer has written
+
+
+
+@app.route("/delete/<reviewID>", methods = ["POST"])
+def deleteReview(reviewID):
+    conn = get_connection()
+    cursor = conn.cursor()
+    #delete the review based on the reviewID given. Authenticate user token first.
+
+
+
 # --- Run the server ---
 if __name__ == "__main__":
     app.run(debug=True, port=5000, host="0.0.0.0")
