@@ -364,7 +364,7 @@ def verify_token():
         conn.close()
 
 # --- Endpoint to edit an existing review ---
-@app.route("/edit_review", methods=["POST"])
+@app.route("/edit_review", methods=["PUT"])
 def edit_review():
     data = request.json
     review_id = data.get("review_id")
@@ -424,7 +424,7 @@ def edit_review():
         conn.close()
 
 # --- Endpoint to delete an existing review ---
-@app.route("/delete_review", methods=["POST"])
+@app.route("/delete_review", methods=["DELETE"])
 def delete_review():
     data = request.json
     review_id = data.get("review_id")

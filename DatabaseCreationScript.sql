@@ -66,7 +66,7 @@ CREATE TABLE SpecialFeature (
 );
 
 CREATE TABLE Review (
-    ReviewID CHAR(75) PRIMARY KEY ON DELETE CASCADE,
+    ReviewID CHAR(75) PRIMARY KEY,
     DateWritten DATETIME,
     NumStars INT,
     Description CHAR(150)
@@ -78,7 +78,7 @@ CREATE TABLE WritesRevAbt (
     BuildingID CHAR(75),
     PRIMARY KEY (ReviewerID, ReviewID, BuildingID),
     FOREIGN KEY (ReviewerID) REFERENCES Reviewer(ReviewerID),
-    FOREIGN KEY (ReviewID) REFERENCES Review(ReviewID),
+    FOREIGN KEY (ReviewID) REFERENCES Review(ReviewID) ON DELETE CASCADE,
     FOREIGN KEY (BuildingID) REFERENCES Building(BuildingName)
 );
 
@@ -88,7 +88,7 @@ CREATE TABLE RatesReview (
     Rating CHAR(75),
     PRIMARY KEY (ReviewerID, ReviewID),
     FOREIGN KEY (ReviewerID) REFERENCES Reviewer(ReviewerID),
-    FOREIGN KEY (ReviewID) REFERENCES Review(ReviewID)
+    FOREIGN KEY (ReviewID) REFERENCES Review(ReviewID) ON DELETE CASCADE
 );
 
 -- Procedures
@@ -295,7 +295,7 @@ CALL AddToken('james.miller@example.com', 'tok_33ddaa1190c998d0');
 CALL AddReview('REV001','2023-04-12 10:15:00',5,'Great modern classrooms and clean facilities.','emma.johnson@example.com','Bertelsmeyer Hall');
 CALL AddReview('REV002','2025-01-22 14:33:00',3,'A solid building with reliable lecture rooms.','liam.smith@example.com','Bertelsmeyer Hall');
 CALL AddReview('REV003','2024-07-08 09:40:00',4,'The equipment here works well and is easy to use.','olivia.martin@example.com','Bertelsmeyer Hall');
-CALL AddReview('REV004','2023-10-18 16:22:00',2,'Good layout but some rooms get crowded.','noah.williams@example.com','Bertelsmeyer Hall');
+CALL AddReview('REV004','2023-10-18 16:22:00',5,'Good layout but some rooms get crowded.','noah.williams@example.com','Bertelsmeyer Hall');
 
 -- ================================================
 -- Butler-Carlton Civil Engineering Hall (REV005–REV008)
@@ -303,7 +303,7 @@ CALL AddReview('REV004','2023-10-18 16:22:00',2,'Good layout but some rooms get 
 CALL AddReview('REV005','2024-02-14 11:11:00',4,'Strong engineering environment with useful labs.','ava.brown@example.com','Butler-Carlton Civil Engineering Hall');
 CALL AddReview('REV006','2023-03-27 15:00:00',1,'Some of the older rooms feel worn out.','will.jones@example.com','Butler-Carlton Civil Engineering Hall');
 CALL AddReview('REV007','2025-05-19 13:25:00',5,'Excellent place for structural testing work.','sophia.davis@example.com','Butler-Carlton Civil Engineering Hall');
-CALL AddReview('REV008','2024-09-04 09:03:00',3,'Overall a reliable building for engineering classes.','james.miller@example.com','Butler-Carlton Civil Engineering Hall');
+CALL AddReview('REV008','2024-09-04 09:03:00',5,'Overall a reliable building for engineering classes.','james.miller@example.com','Butler-Carlton Civil Engineering Hall');
 
 -- ================================================
 -- Computer Science Building (REV009–REV012)
@@ -318,7 +318,7 @@ CALL AddReview('REV012','2023-07-27 16:18:00',3,'Pretty good building with helpf
 -- ================================================
 CALL AddReview('REV013','2024-03-13 14:05:00',4,'The electronics lab is well equipped and spacious.','olivia.martin@example.com','Emerson Electric Company Hall');
 CALL AddReview('REV014','2025-06-01 09:52:00',1,'Some equipment seems outdated.','noah.williams@example.com','Emerson Electric Company Hall');
-CALL AddReview('REV015','2023-09-22 11:47:00',5,'Great place for hands-on electrical projects.','ava.brown@example.com','Emerson Electric Company Hall');
+CALL AddReview('REV015','2023-09-22 11:47:00',1,'Great place for hands-on electrical projects.','ava.brown@example.com','Emerson Electric Company Hall');
 CALL AddReview('REV016','2024-11-30 15:09:00',3,'A decent building but parking is difficult.','will.jones@example.com','Emerson Electric Company Hall');
 
 -- ================================================

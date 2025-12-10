@@ -19,6 +19,9 @@ function Building() {
     const cleanName = buildingName.replace(/\s+/g, "");
     const image = buildingName.replace(/ /g, "_");
     const imageURL = `${api}/static/building_images/${image}.jpg`;  // or .png
+    const loggedInReviewerID = localStorage.getItem("user_reviewerID");
+    const authentToken = localStorage.getItem("auth_token");
+
 
     const [modalOpen, setModalOpen] = useState(false);
     const openModal = () => setModalOpen(true);
@@ -38,8 +41,72 @@ function Building() {
     const [reviewRatings, setReviewRatings] = useState({});
     const [hoverReviewRatings, setHoverReviewRatings] = useState({});
 
+    //Edit/Delete review functionality
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [editReviewText, setEditReviewText] = useState("");
+    const [editReviewStars, setEditReviewStars] = useState(5);
+    const [editReviewID, setEditReviewID] = useState(null);
+    const [userReview, setUserReview] = useState(null); // to test if user has reviewed before
 
-    // const reviewData = fetch(`${api}/buildings`);//find endpoint for specific building
+
+    function openEditModal(review) {
+        setEditReviewID(review.ReviewID);
+        setEditReviewText(review.Description);
+        setEditReviewStars(review.NumStars);
+        setEditModalOpen(true);
+    }
+
+    async function saveEdit() {
+        const token = localStorage.getItem("auth_token");
+        if (!token) return alert("Not logged in.");
+
+        const res = await fetch(`${api}/edit_review`, {
+            method: "PUT",
+            headers: { 
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+                review_id: editReviewID,
+                description: editReviewText,
+                num_stars: editReviewStars,
+                auth_token: authentToken,
+            })
+        });
+
+        const result = await res.json();
+        if (!result.success) {
+            alert(result.error);
+            return;
+        }
+
+        setEditModalOpen(false);
+        setSentReview(true);
+    }
+
+    async function deleteReview(id) {
+        if (!confirm("Delete this review?")) return;
+
+        const token = localStorage.getItem("auth_token");
+        if (!token) return alert("Not logged in.");
+
+        const res = await fetch(`${api}/delete_review`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({ review_id: id, auth_token: token }),
+        });
+
+        const result = await res.json();
+        if (!result.success) {
+            alert(result.error);
+            return;
+        }
+
+        setSentReview(true);
+    }
 
     useEffect(() => {
         async function fetchBuilding() {
@@ -60,22 +127,6 @@ function Building() {
                 console.error("Fetch error:", err);
             }
         }
-
-        //Function to pull author names from ReviewIDs given reviewIDs. Chatgpt skip this commented function
-        // async function fetchReviewNames() {
-        //     try{
-        //         //fill list with reviewIDs and use that to query the database
-        //         const reviewerIDs = [];
-        //         for(let i = 0; i < reviews.length; i ++){
-        //             reviewerIDs.append(reviews[i].ReviewerID);
-        //         }
-        //         setReviewIDs(reviewerIDs);
-        //         const result = await fetch (`${api}/review_author`)
-        //         const data = await result.json();
-        //     } catch (err) {
-        //         console.error("Fetch error: ", err);
-        //     }
-        // }
 
         fetchBuilding();
     }, [buildingName, sentReview]);
@@ -191,6 +242,10 @@ function Building() {
         }
     }
 
+    useEffect(() => {
+        const existing = reviews.find(r => r.ReviewerID === loggedInReviewerID);
+        setUserReview(existing || null);
+    }, [reviews, loggedInReviewerID]);
 
 
     return (
@@ -246,6 +301,26 @@ function Building() {
                         — {(rev.Fname && rev.Lname) ? `${rev.Fname} ${rev.Lname}` : "Unknown Reviewer"}
                     </p>
 
+                    {/* --- Edit/Delete Buttons (only for review owner) --- */}
+                    {rev.ReviewerID === loggedInReviewerID && (
+                        <div className="review-owner-controls">
+                            <button
+                                className="edit-btn"
+                                onClick={() => openEditModal(rev)}
+                            >
+                                Edit
+                            </button>
+
+                            <button
+                                className="delete-btn"
+                                onClick={() => deleteReview(rev.ReviewID)}
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    )}
+
+
                     {/* --- ⭐ Rate This Review Section --- */}
                     <div className="rate-review">
                         <p>Rate this review:</p>
@@ -286,9 +361,15 @@ function Building() {
             </div>
 
             <div className="review-button">
-                <button onClick={() => setModalOpen(true)}>
+                {!userReview ? (
+                <button onClick={() => setModalOpen(true)}>Write a Review</button>
+            ) : (
+                <button onClick={() => openEditModal(userReview)}>Edit Your Review</button>
+            )}
+
+                {/* <button onClick={() => setModalOpen(true)}>
                     Write a Review
-                </button>
+                </button> */}
             </div>
 
             <Modal
@@ -346,6 +427,53 @@ function Building() {
                 <input type="submit" value="Submit Review" />
             </form>
             </Modal>
+            {/* --- EDIT REVIEW MODAL --- */}
+            <Modal
+                isOpen={editModalOpen}
+                onRequestClose={() => setEditModalOpen(false)}
+                className="modal-content"
+                overlayClassName="modal-overlay"
+            >
+                <div className="close-img">
+                    <img src={closeIcon} alt="Close" onClick={() => setEditModalOpen(false)} />
+                </div>
+
+                <h1>Edit Your Review</h1>
+
+                {/* STAR SELECTOR */}
+                <div className="star-rating">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                        <span
+                            key={star}
+                            onClick={() => setEditReviewStars(star)}
+                            style={{
+                                cursor: "pointer",
+                                fontSize: "32px",
+                                color: star <= editReviewStars ? "#FFD700" : "#CCC"
+                            }}
+                        >
+                            ★
+                        </span>
+                    ))}
+                </div>
+
+                {/* TEXT FIELD */}
+                <textarea
+                    maxLength={256}
+                    value={editReviewText}
+                    onChange={(e) => setEditReviewText(e.target.value)}
+                    rows="8"
+                    className='review-modal-textarea'
+                />
+
+                <div  className="review-modal-buttons" style={{ marginTop: "12px" }}>
+                    <button onClick={() => setEditModalOpen(false)} style={{width: "4.5rem"}}>Cancel</button>
+                    <button onClick={saveEdit} style={{ marginLeft: "10px"}}>
+                        Save Changes
+                    </button>
+                </div>
+            </Modal>
+
         </div>
     );
 }

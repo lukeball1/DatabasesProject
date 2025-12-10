@@ -34,7 +34,8 @@ function Login() {
 
             if (result.success) {
                 //store authentication token in local browser storage
-                localStorage.setItem("auth_token", result.auth_token)
+                localStorage.setItem("auth_token", result.auth_token);
+                localStorage.setItem("user_reviewerID", email);
                 alert("Logged in");
                 navigate("/");
             } else {

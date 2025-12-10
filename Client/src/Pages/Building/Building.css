@@ -34,7 +34,7 @@
 
 .right-reviews{
     width: 50%;
-    
+    margin-left: 15%;
 }
 
 .review-button button{
@@ -181,4 +181,53 @@
     font-size: 0.9rem;
     color: #555;
     text-align: right;
+}
+
+.review-modal-textarea{
+    border-radius: 15px;
+    padding-left: 1rem;
+    padding-top: 0.5rem;
+    width: 95%;
+}
+
+.review-modal-buttons{
+    gap: 10rem;
+}
+
+.review-modal-buttons button{
+    border-radius: 15px;
+    height: 1.5rem;
+    width: 7rem;
+    background-color: #007A33;
+    color: white;
+}
+
+.edit-btn {
+    background-color: #007A33;
+    color: white;
+    width: 3rem;
+}
+
+.edit-btn:hover {
+    background-color: #154734;
+    transform: scale(1.03);
+    transition: 0.3s ease;
+}
+
+.delete-btn {
+    background-color: #ff4d4d;
+    color: white;
+    margin-left: 1rem;
+    width: 4rem;
+}
+
+.delete-btn:hover {
+    background-color: #e04444;
+    transform: scale(1.03);
+    transition: 0.3s ease;
+}
+
+.review-owner-controls button{
+    gap: 1rem;
+    border-radius: 10px;
 }
